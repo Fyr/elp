@@ -22,7 +22,7 @@
     $tabs = array(
         __('General') => $this->Html->div('form-body',
             $this->PHForm->input('title', array('label' => array('class' => 'col-md-3 control-label', 'text' => __('District Title'))))
-            .$this->PHForm->input('locality_id', array('type' => 'select', 'options' => $aTowns, 'label' => array('class' => 'col-md-3 control-label', 'text' => __('Town'))))
+            .$this->PHForm->input('town_id', array('type' => 'select', 'options' => $aTowns, 'label' => array('class' => 'col-md-3 control-label', 'text' => __('Town'))))
             .$this->PHForm->input('published', array('type' => 'checkbox', 'label' => array('class' => 'col-md-3 control-label', 'text' => __('Published'))))
         ),
         __('Map') => $this->element('AdminUI/edit_map'),
