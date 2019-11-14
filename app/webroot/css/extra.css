@@ -1,0 +1,24 @@
+.collections .subMenu ul li.active .effective > a {
+  text-decoration: none;
+}
+.collections .subMenu ul li.active .effective > a:hover, .collections .subMenu ul li.active .effective.active > a {
+  text-decoration: underline;
+}
+.pagination span.current {
+  margin: 0 5px;
+  font-weight: bold;
+}
+.mainImg {
+  width: 100%;
+}
+.prevButton, .nextButton {
+  background: rgba(49,49,49,.5);
+  z-index: 10;
+}
+.img3D {
+  position: absolute;
+}
+
+.logo, .logo span {
+  text-transform: none !important;
+}
