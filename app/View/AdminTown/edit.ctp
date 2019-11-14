@@ -25,7 +25,7 @@
             $this->PHForm->input('title', array('label' => array('class' => 'col-md-3 control-label', 'text' => __('Title'))))
             .$this->PHForm->input('published', array('type' => 'checkbox', 'label' => array('class' => 'col-md-3 control-label', 'text' => __('Published'))))
         ),
-        __('Map') => $this->element('AdminUI/edit_map'),
+        __('Map') => $this->element('AdminUI/edit_map', array('location' => $this->request->data($objectType.'.location'))),
     );
 
     echo $this->element('AdminUI/tabs', compact('tabs'));

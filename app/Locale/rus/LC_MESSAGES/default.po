@@ -379,17 +379,47 @@ msgstr "Создать район"
 msgid "Edit District"
 msgstr "Редактировать район"
 
+msgid "Precinct Areas"
+msgstr "Избирательные округи"
+
+msgid "Precinct Area"
+msgstr "Избир.округ"
+
+msgid "Precinct Area Title"
+msgstr "Название округа"
+
+msgid "Area Num"
+msgstr "Номер округа"
+
+msgid "Create Precinct Area"
+msgstr "Создать округ"
+
+msgid "Edit Precinct Area"
+msgstr "Редактировать округ"
+
 msgid "Houses"
-msgstr "Жилье"
+msgstr "Электорат"
 
 msgid "Address"
 msgstr "Адрес"
 
 msgid "Create House"
-msgstr "Создать жилье"
+msgstr "Создать обьект электората"
 
 msgid "Edit House"
-msgstr "Редактировать жилье"
+msgstr "Редактировать обьект электората"
 
 msgid "Town / District"
 msgstr "Населенный пункт / Р-н"
+
+msgid "Sections"
+msgstr "Подьездов"
+
+msgid "Flats"
+msgstr "Квартир"
+
+msgid "Residents"
+msgstr "Электорат"
+
+msgid "Params"
+msgstr "Параметры"

@@ -10,20 +10,19 @@ class House extends AppModel {
             'foreignKey' => 'town_id',
             'dependent' => true
         ),
-        'HouseDistrict' => array(
-            'className' => 'District',
-            'foreignKey' => 'district_id',
+        'HousePrecinctArea' => array(
+            'className' => 'PrecinctArea',
+            'foreignKey' => 'precinctarea_id',
             'dependent' => true
         )
     );
 
     public function getEditOptions() {
-        $this->District = $this->loadModel('District');
-        $conditions = array('District.published' => 1);
-        $order = array('DistrictTown.title' => 'ASC', 'District.title' => 'ASC');
-        $aDistricts = $this->District->find('all', compact('conditions', 'order'));
-        $aOptions = Hash::combine($aDistricts, '{n}.District.id', '{n}.District.title', '{n}.DistrictTown.title');
-        fdebug($aOptions, 'tmp1.log');
+        $this->PrecinctArea = $this->loadModel('PrecinctArea');
+        $conditions = array('PrecinctArea.published' => 1);
+        $order = array('PrecinctAreaTown.title' => 'ASC', 'PrecinctArea.title' => 'ASC');
+        $aAreas = $this->PrecinctArea->find('all', compact('conditions', 'order'));
+        $aOptions = Hash::combine($aAreas, '{n}.PrecinctArea.id', '{n}.PrecinctArea.title', '{n}.PrecinctAreaTown.title');
         return $aOptions;
     }
 }

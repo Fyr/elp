@@ -21,6 +21,7 @@
 		array('label' => __('Maps'), 'icon' => 'icon-layers', 'url' => '', 'submenu' => array(
 			array('label' => __('Towns'), 'url' => array('controller' => 'AdminTown', 'action' => 'index')),
 			array('label' => __('Districts'), 'url' => array('controller' => 'AdminDistrict', 'action' => 'index')),
+			array('label' => __('Precinct Areas'), 'url' => array('controller' => 'AdminPrecinctArea', 'action' => 'index')),
 			array('label' => __('Houses'), 'url' => array('controller' => 'AdminHouse', 'action' => 'index')),
 		)),
 		array('label' => __('Settings'), 'icon' => 'icon-wrench', 'url' => '', 'submenu' => array(

@@ -9,16 +9,9 @@
     echo $this->Flash->render();
 
     $columns = $this->PHTableGrid->getDefaultColumns($objectType);
-    $columns['House.town_id']['label'] = __('Town');
-    $columns['House.town_id']['format'] = 'string';
-    $columns['HousePrecinctArea.id']['format'] = 'string';
-    $columns['HousePrecinctArea.id']['label'] = __('Precinct Area');
-
-    $rowset = $this->PHTableGrid->getDefaultRowset($objectType);
-    foreach($rowset as &$row) {
-        $row['House']['town_id'] = $aTowns[$row['House']['town_id']];
-        $row['HousePrecinctArea']['id'] = $aPrecinctAreas[$row['HousePrecinctArea']['id']];
-    }
+    $columns[$objectType.'.title']['label'] = __('Precinct Area Title');
+    $columns[$objectType.'.num']['label'] = __('Area Num');
+    $columns['PrecinctAreaTown.title']['label'] = __('Town');
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -39,7 +32,7 @@
                         </div>
                     </div>
                 </div>
-                <?=$this->PHTableGrid->render($objectType, compact('rowset', 'columns'))?>
+                <?=$this->PHTableGrid->render($objectType, compact('columns'))?>
             </div>
         </div>
     </div>
