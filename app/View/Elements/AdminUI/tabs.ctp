@@ -17,7 +17,7 @@
 	$i = 0;
 	foreach($tabs as $title => $content) {
 		$i++;
-		$class = ($i == 1) ? 'tab-pane fade active in' : 'tab-pane fade';
+		$class = ($i == 1) ? 'tab-pane fade active in' : 'tab-pane';
 ?>
 		<div class="<?=$class?>" id="tab_<?=$i?>">
 			<?=$content?>

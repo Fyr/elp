@@ -18,14 +18,17 @@
 <?
     echo $this->element('AdminUI/form_title', array('title' => $this->ObjectType->getTitle($id ? 'edit' : 'create', $objectType)));
     echo $this->PHForm->create($objectType);
-
+    echo $this->PHForm->hidden('location');
     $tabs = array(
         __('General') => $this->Html->div('form-body',
             // $this->element('AdminUI/checkboxes', array('labels' => array('published' => __('Published'))))
-            $this->PHForm->input('title', array('label' => array('class' => 'col-md-3 control-label', 'text' => __('Title'))))
+            $this->PHForm->input('title', array(
+                'label' => array('class' => 'col-md-3 control-label', 'text' => __('Title')),
+                'onchange' => 'onChangeTitle()'
+            ))
             .$this->PHForm->input('published', array('type' => 'checkbox', 'label' => array('class' => 'col-md-3 control-label', 'text' => __('Published'))))
         ),
-        __('Map') => $this->element('AdminUI/edit_map', array('location' => $this->request->data($objectType.'.location'))),
+        __('Map') => $this->element('AdminUI/edit_map'),
     );
 
     echo $this->element('AdminUI/tabs', compact('tabs'));
@@ -35,3 +38,21 @@
         </div>
     </div>
 </div>
+<script>
+function onChangeTitle() {
+    var item = admin_getGeoObjectData();
+    item.title = $('#<?=$objectType?>Title').val();
+    admin_setGetObjectData(item);
+    reloadMap({zoom: (item.location) ? 10 : 7});
+}
+
+$(function(){
+    var item = <?=($id) ? json_encode($this->request->data($objectType)) : '""'?>;
+    admin_setGetObjectData(item);
+    reloadMap({zoom: (item.location) ? 10 : 7});
+    $('#<?=$objectType?>EditForm').on('submit', function(){
+        var data = admin_getGeoObjectData();
+        $('#<?=$objectType?>Location').val(JSON.stringify(data.location));
+    });
+});
+</script>

@@ -18,10 +18,10 @@
 <?
     echo $this->element('AdminUI/form_title', array('title' => $this->ObjectType->getTitle($id ? 'edit' : 'create', $objectType)));
     echo $this->PHForm->create($objectType);
-
+    echo $this->PHForm->hidden("location");
     $tabs = array(
         __('General') => $this->Html->div('form-body',
-            $this->PHForm->input('address')
+            $this->PHForm->input('address', array('onchange' => 'onChangeAddress()'))
             .$this->PHForm->input('town_id', array(
                 'type' => 'select',
                 'options' => $aTowns,
@@ -36,7 +36,7 @@
             .$this->PHForm->input('flats')
             .$this->PHForm->input('residents')
         ),
-        __('Map') => $this->element('AdminUI/edit_map', array('location' => $this->request->data($objectType.'.location'))),
+        __('Map') => $this->element('AdminUI/edit_map') // , array('location' => $this->request->data($objectType.'.location'))
     );
 
     echo $this->element('AdminUI/tabs', compact('tabs'));
@@ -47,7 +47,6 @@
     </div>
 </div>
 <script>
-var id;
 function onChangeTown(id) {
     var locality = $('#HouseTownId option:selected');
     $('#HouseDistrictId > optgroup > option').attr('disabled', true);
@@ -57,11 +56,26 @@ function onChangeTown(id) {
     }
 }
 
+function onChangeAddress() {
+    var item = admin_getGeoObjectData();
+    item.title = $('#<?=$objectType?>Address').val();
+    admin_setGetObjectData(item);
+    reloadMap({zoom: (item.location) ? 15 : 7});
+}
+
 $(function(){
-    id = <?=($id) ? $id : '""'?>;
-    if (id) {
-        onChangeTown(id);
+    var item = <?=($id) ? json_encode($this->request->data($objectType)) : '""'?>;
+    if (item.id) {
+        onChangeTown(item.id);
+        item.title = item.address;
     }
+    admin_setGetObjectData(item);
+    reloadMap({zoom: (item.location) ? 15 : 7});
+
+    $('#HouseEditForm').on('submit', function(){
+        var data = admin_getGeoObjectData();
+        $('#HouseLocation').val(JSON.stringify(data.location));
+    });
 });
 </script>
 

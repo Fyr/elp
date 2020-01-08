@@ -47,6 +47,7 @@
 	<link href="http://<?=Configure::read('domain.url')?>/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
 	<link href="http://<?=Configure::read('domain.url')?>/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
 
+	<link rel="stylesheet" href="/css/leaflet.css" />
 	<!-- END PAGE LEVEL PLUGINS -->
 <?
 	echo $this->Html->meta('icon');
@@ -72,7 +73,7 @@
 	/* .page-header.navbar .top-menu .navbar-nav > li.dropdown > a.dropdown-toggle { padding-top: 14px; color: #bbc1c8; }
 	.page-header.navbar .top-menu .navbar-nav > li.dropdown > a.dropdown-toggle:hover { padding-top: 14px; color: #e5e7ea; } */
 </style>
-	<script src="http://<?=Configure::read('domain.url')?>/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="http://<?=Configure::read('domain.url')?>/assets/global/plugins/jquery.min.js"></script>
 </head>
 <!-- END HEAD -->
 
@@ -166,8 +167,14 @@
 <script src="http://<?=Configure::read('domain.url')?>/assets/global/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.ru.min.js" type="text/javascript"></script>
 
 <script src="http://<?=Configure::read('domain.url')?>/js/vendor/jquery.cookie.js" type="text/javascript"></script>
+
 <?
-	echo $this->Html->script(array('admin'));
+	echo $this->Html->script(array(
+		'vendor/leaflet',
+		'/Table/js/format',
+		'admin',
+		'map'
+	));
 	echo $this->fetch('script');
 	// echo $this->element('sql_dump');
 ?>

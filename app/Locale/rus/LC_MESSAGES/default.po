@@ -423,3 +423,6 @@ msgstr "Электорат"
 
 msgid "Params"
 msgstr "Параметры"
+
+msgid "Delete area"
+msgstr "Удалить область"

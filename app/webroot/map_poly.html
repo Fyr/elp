@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!-- link rel="stylesheet" href="/css/leaflet.css" /-->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+	<script type="text/javascript" src="/js/vendor/jquery.1.11.0.min.js"></script>
+	<!-- script type="text/javascript" src="/js/vendor/leaflet.js"></script-->
+	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+	<script type="text/javascript" src="/js/vendor/jquery.cookie.js"></script>
+	<style>
+html, body { margin: 0 }
+#map { width:100%; }
+#removePoly {
+	background: rgba(0,0,0,0);
+	border: 1px solid #f00;
+	color: #f00;
+	font-family: "Tahoma", sans-serif;
+	padding: 2px 7px;
+	position: absolute;
+	left: 70px;
+	top: 10px;
+	cursor: pointer;
+	z-index: 1000;
+}
+#removePoly:hover {
+	background: rgba(255,0,0,0.5);
+	color: #fff;
+}
+	</style>
+	<script type='text/javascript'>
+
+function getGeoObjectData() {
+	var data = JSON.parse($.cookie('geo_object'));
+	console.log('getGeoObjectData', data);
+	return data || { location: "" };
+}
+
+function setGetObjectData(data) {
+	console.log('HTML setGetObjectData', data);
+	$.cookie('geo_object', JSON.stringify(data), {path: '/'});
+}
+
+function createMarker(data) {
+	var Pointer = L.icon({
+		iconUrl: '/img/pointer.png',
+		iconSize: [41, 41],
+		iconAnchor: [10, 40],
+		popupAnchor: [4, -38],
+		tooltipAnchor: [0, -40]
+	});
+	// return L.marker(data.location, {title: data.title, icon: Pointer});
+	console.log('createMarker', data);
+	var objL = L.marker(data.location, {icon: Pointer});
+	if (data.title) {
+		objL.bindTooltip(data.title, {opacity: 0.7, direction: 'top'});
+	}
+	return objL;
+}
+
+function createPolygon(data) {
+	console.log('createPolygon', data);
+	var objL = L.polygon(data.location);
+	if (data.location.length > 2) {
+		console.log('removePoly show');
+		$('#removePoly').show();
+
+		if (data.title) {
+			objL.bindTooltip(data.title, {opacity: 0.7, direction: 'center'});
+		}
+	}
+	return objL;
+}
+
+function createGeoObject(type, data) {
+	if (type == 'poly') {
+		return createPolygon(data);
+	}
+	return createMarker(data);
+}
+
+function updateGeoObjectData(type, latlng) {
+	var data = getGeoObjectData();
+	console.log('updateGeoObjectData', data, latlng);
+	if (type == 'poly') {
+		data.location = data.location || [];
+		data.location.push(Object.values(latlng));
+	} else {
+		data.location = latlng;
+	}
+	setGetObjectData(data);
+	return createGeoObject(type, data);
+}
+
+function calcAvg(data, i) {
+	var latlngs = data.location.map(function(e) { return e[i]; });
+	return latlngs.reduce(function(sum, a) { return sum + a; }, 0) / latlngs.length;
+}
+
+function getCenteredLocation(type, data) {
+	var center = { lat: 53.9018, lng: 27.5577, zoom: 7 }; // default Byelorus location
+	if (data.location) {
+		if (type == 'poly') {
+			center.lat = calcAvg(data, 0);
+			center.lng = calcAvg(data, 1);
+			center.zoom = 12;
+		} else {
+			center = data.location;
+			center.zoom = 15;
+		}
+	}
+	if (zoom = getParam('zoom')) {
+		center.zoom = zoom;
+	}
+	return center;
+}
+
+function getParam(key) {
+	return new URL(window.location.href).searchParams.get(key);
+}
+
+function removePoly() {
+	if (geo_object) {
+		mapL.removeLayer(geo_object);
+	}
+}
+
+$(function(){
+	var geo_object, h = getParam('h');
+	$('#map').height(h);
+	var type = getParam('type') || 'marker';
+	var data = getGeoObjectData();
+	var center = getCenteredLocation(type, data);
+	console.log('IFRAME', h, type, center);
+
+	var mapL = new L.Map('map', {
+		// zoomDelta: 0.25,
+		wheelPxPerZoomLevel: 400,
+		center: new L.LatLng(center.lat, center.lng),
+		zoom: center.zoom
+	});
+	var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+	mapL.addLayer(osm);
+
+	$('#removePoly').hide();
+	if (data && data.location) {
+		geo_object = createGeoObject(type, data).addTo(mapL);
+	}
+
+	mapL.on('click', function(e) {
+		if (geo_object) {
+			mapL.removeLayer(geo_object);
+		}
+
+		geo_object = updateGeoObjectData(type, e.latlng).addTo(mapL);
+		console.log('getZoom', mapL.getZoom());
+		// marker.bindPopup("<b>Hello world!</b><br />I am a popup.");
+	});
+
+	$('#removePoly').click(function(){
+		var data = getGeoObjectData();
+		data.location = "";
+		setGetObjectData(data);
+		$('#removePoly').hide();
+		if (geo_object) {
+			mapL.removeLayer(geo_object);
+		}
+	});
+});
+	</script>
+</head>
+<body>
+<button id="removePoly">Удалить область</button>
+<div id="map"></div>
+</body>
+</html>
